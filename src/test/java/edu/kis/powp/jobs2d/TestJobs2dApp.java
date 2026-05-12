@@ -10,9 +10,6 @@ import edu.kis.powp.jobs2d.command.gui.*;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
-import edu.kis.powp.jobs2d.command.CompoundCommandFactory;
-import edu.kis.powp.jobs2d.command.ImmutableCompoundCommandFactory;
-import edu.kis.powp.jobs2d.command.catalog.CommandCatalog;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
 import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.RealTimeDriver;
@@ -33,7 +30,6 @@ import edu.kis.powp.jobs2d.command.gui.CommandCatalogWindow;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private static final CommandCatalog commandCatalog = createCommandCatalog();
 
     /**
      * Setup test concerning preset figures in context.
@@ -163,7 +159,7 @@ public class TestJobs2dApp {
 
         CommandCatalogWindow commandCatalogWindow = new CommandCatalogWindow(
                 CommandsFeature.getDriverCommandManager(),
-                getCommandCatalog()
+                CommandsFeature.getCommandCatalog()
         );
         application.addWindowComponent("Command Catalog", commandCatalogWindow);
 
@@ -219,34 +215,6 @@ public class TestJobs2dApp {
         application.addComponentMenuElement(Logger.class, "Severe level",
                 (ActionEvent e) -> logger.setLevel(Level.SEVERE));
         application.addComponentMenuElement(Logger.class, "OFF logging", (ActionEvent e) -> logger.setLevel(Level.OFF));
-    }
-
-    /** Get the command catalog instance.
-     *
-     * @return CommandCatalog instance.
-     */
-    public static CommandCatalog getCommandCatalog() {
-        return commandCatalog;
-    }
-
-    /**
-     * Create and populate the command catalog with predefined commands.
-     *
-     * @return Populated CommandCatalog instance.
-     */
-    private static CommandCatalog createCommandCatalog() {
-        CommandCatalog commandCatalog = new CommandCatalog();
-
-        commandCatalog.addCommand("TopSecretCommand", CompoundCommandFactory.createTopSecretCommand(),
-                java.util.Arrays.asList("secret", "basic"));
-
-        commandCatalog.addCommand("KiteCommand", CompoundCommandFactory.createKiteCommand(),
-                java.util.Arrays.asList("kite", "basic"));
-
-        commandCatalog.addCommand("Immutable Rectangle", ImmutableCompoundCommandFactory.getRectangle(0, 0, 100, 150),
-                java.util.Arrays.asList("rectangle", "basic"));
-
-        return commandCatalog;
     }
 
     /**
