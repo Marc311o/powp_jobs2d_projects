@@ -2,7 +2,6 @@ package edu.kis.powp.jobs2d;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +10,8 @@ import edu.kis.powp.jobs2d.command.gui.*;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
 import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
+import edu.kis.powp.jobs2d.command.gui.CommandManagerWindow;
+import edu.kis.powp.jobs2d.command.gui.CommandManagerWindowCommandChangeObserver;
 import edu.kis.powp.jobs2d.drivers.RealTimeDriver;
 import edu.kis.powp.jobs2d.drivers.RecordingDriver;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
@@ -25,13 +26,14 @@ import edu.kis.powp.jobs2d.events.SelectLoadRecordedMacroOptionListener;
 import edu.kis.powp.jobs2d.events.SelectClearPanelOptionListener;
 import edu.kis.powp.jobs2d.events.SelectToggleRecordingOptionListener;
 import edu.kis.powp.jobs2d.events.SelectClearRecordingOptionListener;
+import edu.kis.powp.jobs2d.command.gui.CommandCatalogWindow;
 
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     /**
      * Setup test concerning preset figures in context.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupPresetTests(Application application) {
@@ -46,14 +48,10 @@ public class TestJobs2dApp {
 
     /**
      * Setup test using driver commands in context.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupCommandTests(Application application) {
-        application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
-        application.addTest("Load immutable rectangle command", new SelectLoadImmutableRectangleCommandOptionListener());
-
-        application.addTest("Load kite command", new SelectLoadKiteCommandOptionListener());
         application.addTest("Load recorded macro", new SelectLoadRecordedMacroOptionListener());
 
         application.addTest("Clear panel", new SelectClearPanelOptionListener());
@@ -93,7 +91,7 @@ public class TestJobs2dApp {
 
     /**
      * Setup driver manager, and set default VisitableDriver for application.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupDrivers(Application application) {
@@ -138,7 +136,7 @@ public class TestJobs2dApp {
         chaosCompositeDriver.addDriver(TrackingLoggerDriver);
         chaosCompositeDriver.addDriver(scaledDownDriver);
         DriverFeature.addDriver(chaosCompositeDriver.toString(), chaosCompositeDriver);
-      
+
         driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
         VisitableDriver animatedDriver = new RealTimeDriver(driver, 10, 10, "Real-Time Driver 1x speed");
         DriverFeature.addDriver(animatedDriver.toString(), animatedDriver);
@@ -154,6 +152,12 @@ public class TestJobs2dApp {
 
         CommandManagerWindow commandManager = new CommandManagerWindow(CommandsFeature.getDriverCommandManager());
         application.addWindowComponent("Command Manager", commandManager);
+
+        CommandCatalogWindow commandCatalogWindow = new CommandCatalogWindow(
+                CommandsFeature.getDriverCommandManager(),
+                CommandsFeature.getCommandCatalog()
+        );
+        application.addWindowComponent("Command Catalog", commandCatalogWindow);
 
         CommandManagerWindowCommandChangeObserver windowObserver = new CommandManagerWindowCommandChangeObserver(
                 commandManager);
@@ -192,7 +196,7 @@ public class TestJobs2dApp {
 
     /**
      * Setup menu for adjusting logging settings.
-     * 
+     *
      * @param application Application context.
      */
     private static void setupLogger(Application application) {
@@ -240,5 +244,4 @@ public class TestJobs2dApp {
             }
         });
     }
-
 }
