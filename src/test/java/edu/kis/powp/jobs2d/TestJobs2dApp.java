@@ -223,6 +223,7 @@ public class TestJobs2dApp {
                 FeaturesManager.registerFeature(new CommandsFeature());
                 FeaturesManager.registerFeature(new DriverFeature());
                 FeaturesManager.registerFeature(new CanvasFeature());
+                FeaturesManager.registerFeature(new MouseInteractionFeature());
 
                 // Automatycznie skonfiguruj wszystkie zarejestrowane funkcje
                 // To zastępuje ręczne wywołania setup dla każdej funkcji
