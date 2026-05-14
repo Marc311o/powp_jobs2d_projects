@@ -18,7 +18,7 @@ import edu.kis.powp.jobs2d.drivers.DeviceUsageSubscriber;
 public class DeviceManagementWindow extends JFrame implements WindowComponent, DeviceUsageSubscriber {
 
     private DeviceUsageManager deviceUsageManager;
-    private JProgressBar waterProgressBar;
+    private JProgressBar headUsageProgressBar;
     private JLabel usageLabel;
 
     private static final long serialVersionUID = 1L;
@@ -35,12 +35,12 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
         c.weightx = 1;
         c.gridx = 0;
 
-        content.add(new JLabel("Water Level:"), c);
+        content.add(new JLabel("Head Usage Level:"), c);
 
-        waterProgressBar = new JProgressBar(0, 10000);
-        waterProgressBar.setValue(10000);
-        waterProgressBar.setStringPainted(true);
-        content.add(waterProgressBar, c);
+        headUsageProgressBar = new JProgressBar(0, 10000);
+        headUsageProgressBar.setValue(10000);
+        headUsageProgressBar.setStringPainted(true);
+        content.add(headUsageProgressBar, c);
 
         usageLabel = new JLabel("Total Usage: 0.0");
         content.add(usageLabel, c);
@@ -78,23 +78,23 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
 
     @Override
     public void update(String message) {
-        if ("LOW_WATER".equals(message)) {
-            waterProgressBar.setForeground(Color.RED);
+        if ("LOW_HEAD_USAGE".equals(message)) {
+            headUsageProgressBar.setForeground(Color.RED);
         }
     }
 
     @Override
-    public void onUsageUpdate(double waterLevel, double maxWaterLevel, double totalUsage) {
-        if (waterProgressBar.getMaximum() != (int) maxWaterLevel) {
-            waterProgressBar.setMaximum((int) maxWaterLevel);
+    public void onUsageUpdate(double headUsageLevel, double maxHeadUsageLevel, double totalUsage) {
+        if (headUsageProgressBar.getMaximum() != (int) maxHeadUsageLevel) {
+            headUsageProgressBar.setMaximum((int) maxHeadUsageLevel);
         }
-        waterProgressBar.setValue((int) waterLevel);
+        headUsageProgressBar.setValue((int) headUsageLevel);
         usageLabel.setText(String.format("Total Usage: %.2f", totalUsage));
         
-        if (waterLevel >= (maxWaterLevel * 0.1)) {
-            waterProgressBar.setForeground(null); // Reset to default
+        if (headUsageLevel >= (maxHeadUsageLevel * 0.1)) {
+            headUsageProgressBar.setForeground(null); // Reset to default
         } else {
-            waterProgressBar.setForeground(Color.RED);
+            headUsageProgressBar.setForeground(Color.RED);
         }
     }
 
