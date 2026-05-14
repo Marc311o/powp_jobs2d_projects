@@ -100,6 +100,10 @@ public class TestJobs2dApp {
 
         DrawPanelController drawerController = DrawerFeature.getDrawerController();
         VisitableDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
+
+        // Decorate the default driver
+        driver = DeviceUsageFeature.decorateDriver(driver);
+
         DriverFeature.addDriver("Line Simulator", driver);
         DriverFeature.getDriverManager().setCurrentDriver(driver);
 
@@ -228,6 +232,7 @@ public class TestJobs2dApp {
                 FeaturesManager.registerFeature(new DriverFeature());
                 FeaturesManager.registerFeature(new CanvasFeature());
                 FeaturesManager.registerFeature(new MouseInteractionFeature());
+                FeaturesManager.registerFeature(new DeviceUsageFeature());
 
                 // Automatycznie skonfiguruj wszystkie zarejestrowane funkcje
                 // To zastępuje ręczne wywołania setup dla każdej funkcji
