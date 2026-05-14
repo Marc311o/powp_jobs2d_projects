@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages device usage state such as head usage level and total distance.
+ * Manages device usage state such as operational usage level and total distance.
  * Also acts as a publisher for device usage events.
  */
 public class DeviceUsageManager implements DeviceUsagePublisher {
-    private final double maxHeadUsageLevel;
-    private double headUsageLevel;
+    private final double maxOperationalUsageLevel;
+    private double operationalUsageLevel;
     private double totalUsage = 0.0;
-    private boolean lowHeadUsageNotified = false;
+    private boolean lowOperationalUsageNotified = false;
 
     private final List<DeviceUsageSubscriber> subscribers = new ArrayList<>();
 
@@ -19,35 +19,35 @@ public class DeviceUsageManager implements DeviceUsagePublisher {
         this(10000.0);
     }
 
-    public DeviceUsageManager(double maxHeadUsageLevel) {
-        this.maxHeadUsageLevel = maxHeadUsageLevel;
-        this.headUsageLevel = maxHeadUsageLevel;
+    public DeviceUsageManager(double maxOperationalUsageLevel) {
+        this.maxOperationalUsageLevel = maxOperationalUsageLevel;
+        this.operationalUsageLevel = maxOperationalUsageLevel;
     }
 
     public synchronized void use(double distance) {
-        headUsageLevel -= distance;
+        operationalUsageLevel -= distance;
         totalUsage += distance;
-        checkHeadUsageLevel();
-        notifyUsageUpdate(headUsageLevel, maxHeadUsageLevel, totalUsage);
+        checkOperationalUsageLevel();
+        notifyUsageUpdate(operationalUsageLevel, maxOperationalUsageLevel, totalUsage);
     }
 
-    public synchronized boolean isOutOfHeadUsage() {
-        return headUsageLevel <= 0;
+    public synchronized boolean isOutOfOperationalUsage() {
+        return operationalUsageLevel <= 0;
     }
 
-    private void checkHeadUsageLevel() {
-        if (headUsageLevel < (maxHeadUsageLevel * 0.1) && !lowHeadUsageNotified) {
-            notifySubscribers("LOW_HEAD_USAGE");
-            lowHeadUsageNotified = true;
+    private void checkOperationalUsageLevel() {
+        if (operationalUsageLevel < (maxOperationalUsageLevel * 0.1) && !lowOperationalUsageNotified) {
+            notifySubscribers("LOW_OPERATIONAL_USAGE");
+            lowOperationalUsageNotified = true;
         }
     }
 
-    public synchronized double getHeadUsageLevel() {
-        return headUsageLevel;
+    public synchronized double getOperationalUsageLevel() {
+        return operationalUsageLevel;
     }
 
-    public synchronized double getMaxHeadUsageLevel() {
-        return maxHeadUsageLevel;
+    public synchronized double getMaxOperationalUsageLevel() {
+        return maxOperationalUsageLevel;
     }
 
     public synchronized double getTotalUsage() {
@@ -55,20 +55,20 @@ public class DeviceUsageManager implements DeviceUsagePublisher {
     }
 
     public synchronized void refill() {
-        this.headUsageLevel = maxHeadUsageLevel;
-        this.lowHeadUsageNotified = false;
-        notifyUsageUpdate(headUsageLevel, maxHeadUsageLevel, totalUsage);
+        this.operationalUsageLevel = maxOperationalUsageLevel;
+        this.lowOperationalUsageNotified = false;
+        notifyUsageUpdate(operationalUsageLevel, maxOperationalUsageLevel, totalUsage);
     }
 
     public synchronized void service() {
         this.totalUsage = 0.0;
-        notifyUsageUpdate(headUsageLevel, maxHeadUsageLevel, totalUsage);
+        notifyUsageUpdate(operationalUsageLevel, maxOperationalUsageLevel, totalUsage);
     }
 
     @Override
     public synchronized void addSubscriber(DeviceUsageSubscriber subscriber) {
         subscribers.add(subscriber);
-        subscriber.onUsageUpdate(headUsageLevel, maxHeadUsageLevel, totalUsage);
+        subscriber.onUsageUpdate(operationalUsageLevel, maxOperationalUsageLevel, totalUsage);
     }
 
     @Override
@@ -84,9 +84,9 @@ public class DeviceUsageManager implements DeviceUsagePublisher {
     }
 
     @Override
-    public synchronized void notifyUsageUpdate(double headUsageLevel, double maxHeadUsageLevel, double totalUsage) {
+    public synchronized void notifyUsageUpdate(double operationalUsageLevel, double maxOperationalUsageLevel, double totalUsage) {
         for (DeviceUsageSubscriber subscriber : subscribers) {
-            subscriber.onUsageUpdate(headUsageLevel, maxHeadUsageLevel, totalUsage);
+            subscriber.onUsageUpdate(operationalUsageLevel, maxOperationalUsageLevel, totalUsage);
         }
     }
 }

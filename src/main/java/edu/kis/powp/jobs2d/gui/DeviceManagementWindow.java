@@ -18,7 +18,7 @@ import edu.kis.powp.jobs2d.drivers.DeviceUsageSubscriber;
 public class DeviceManagementWindow extends JFrame implements WindowComponent, DeviceUsageSubscriber {
 
     private DeviceUsageManager deviceUsageManager;
-    private JProgressBar headUsageProgressBar;
+    private JProgressBar operationalUsageProgressBar;
     private JLabel usageLabel;
 
     private static final long serialVersionUID = 1L;
@@ -35,12 +35,12 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
         c.weightx = 1;
         c.gridx = 0;
 
-        content.add(new JLabel("Head Usage Level:"), c);
+        content.add(new JLabel("Operational Usage Level:"), c);
 
-        headUsageProgressBar = new JProgressBar(0, 10000);
-        headUsageProgressBar.setValue(10000);
-        headUsageProgressBar.setStringPainted(true);
-        content.add(headUsageProgressBar, c);
+        operationalUsageProgressBar = new JProgressBar(0, 10000);
+        operationalUsageProgressBar.setValue(10000);
+        operationalUsageProgressBar.setStringPainted(true);
+        content.add(operationalUsageProgressBar, c);
 
         usageLabel = new JLabel("Total Usage: 0.0");
         content.add(usageLabel, c);
@@ -78,23 +78,23 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
 
     @Override
     public void update(String message) {
-        if ("LOW_HEAD_USAGE".equals(message)) {
-            headUsageProgressBar.setForeground(Color.RED);
+        if ("LOW_OPERATIONAL_USAGE".equals(message)) {
+            operationalUsageProgressBar.setForeground(Color.RED);
         }
     }
 
     @Override
-    public void onUsageUpdate(double headUsageLevel, double maxHeadUsageLevel, double totalUsage) {
-        if (headUsageProgressBar.getMaximum() != (int) maxHeadUsageLevel) {
-            headUsageProgressBar.setMaximum((int) maxHeadUsageLevel);
+    public void onUsageUpdate(double operationalUsageLevel, double maxOperationalUsageLevel, double totalUsage) {
+        if (operationalUsageProgressBar.getMaximum() != (int) maxOperationalUsageLevel) {
+            operationalUsageProgressBar.setMaximum((int) maxOperationalUsageLevel);
         }
-        headUsageProgressBar.setValue((int) headUsageLevel);
+        operationalUsageProgressBar.setValue((int) operationalUsageLevel);
         usageLabel.setText(String.format("Total Usage: %.2f", totalUsage));
         
-        if (headUsageLevel >= (maxHeadUsageLevel * 0.1)) {
-            headUsageProgressBar.setForeground(null); // Reset to default
+        if (operationalUsageLevel >= (maxOperationalUsageLevel * 0.1)) {
+            operationalUsageProgressBar.setForeground(null); // Reset to default
         } else {
-            headUsageProgressBar.setForeground(Color.RED);
+            operationalUsageProgressBar.setForeground(Color.RED);
         }
     }
 

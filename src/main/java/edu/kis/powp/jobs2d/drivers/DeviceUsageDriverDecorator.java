@@ -4,7 +4,7 @@ import edu.kis.powp.jobs2d.drivers.visitor.DriverVisitor;
 import edu.kis.powp.jobs2d.drivers.visitor.VisitableDriver;
 
 /**
- * Driver decorator that tracks device usage such as head usage level and total distance.
+ * Driver decorator that tracks device usage such as operational usage level and total distance.
  */
 public class DeviceUsageDriverDecorator implements VisitableDriver {
     private final VisitableDriver innerDriver;
@@ -26,8 +26,8 @@ public class DeviceUsageDriverDecorator implements VisitableDriver {
 
     @Override
     public synchronized void operateTo(int x, int y) {
-        if (manager.isOutOfHeadUsage()) {
-            manager.notifySubscribers("OUT_OF_HEAD_USAGE");
+        if (manager.isOutOfOperationalUsage()) {
+            manager.notifySubscribers("REACHED_MAX_OPERATIONAL_USAGE");
             return;
         }
         double distance = Math.hypot(x - currentX, y - currentY);

@@ -4,5 +4,5 @@ public interface DeviceUsagePublisher {
     void addSubscriber(DeviceUsageSubscriber subscriber);
     void removeSubscriber(DeviceUsageSubscriber subscriber);
     void notifySubscribers(String message);
-    void notifyUsageUpdate(double headUsageLevel, double maxHeadUsageLevel, double totalUsage);
+    void notifyUsageUpdate(double operationalUsageLevel, double maxOperationalUsageLevel, double totalUsage);
 }
