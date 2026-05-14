@@ -101,8 +101,8 @@ public class TestJobs2dApp {
         DrawPanelController drawerController = DrawerFeature.getDrawerController();
         VisitableDriver driver = new LineDriverAdapter(drawerController, LineFactory.getBasicLine(), "basic");
 
-        // Decorate the default driver with 10000 water units
-        driver = DeviceUsageFeature.decorateDriver(driver, 10000.0);
+        // Decorate the default driver
+        driver = DeviceUsageFeature.decorateDriver(driver);
 
         DriverFeature.addDriver("Line Simulator", driver);
         DriverFeature.getDriverManager().setCurrentDriver(driver);

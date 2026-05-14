@@ -2,16 +2,20 @@ package edu.kis.powp.jobs2d.features;
 
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.drivers.DeviceUsageDriverDecorator;
+import edu.kis.powp.jobs2d.drivers.DeviceUsageManager;
 import edu.kis.powp.jobs2d.drivers.visitor.VisitableDriver;
 import edu.kis.powp.jobs2d.gui.DeviceManagementWindow;
 
 public class DeviceUsageFeature implements IFeature {
 
     private static DeviceManagementWindow deviceManagementWindow;
-    private static DeviceUsageDriverDecorator currentDecorator;
+    private static DeviceUsageManager deviceUsageManager;
 
     @Override
     public void setup(Application application) {
+        deviceUsageManager = new DeviceUsageManager();
+        deviceManagementWindow = new DeviceManagementWindow(deviceUsageManager);
+        
         application.addComponentMenu(DeviceUsageFeature.class, "Device Usage");
         application.addComponentMenuElement(DeviceUsageFeature.class, "Open Device Manager", 
                 (e) -> {
@@ -27,23 +31,11 @@ public class DeviceUsageFeature implements IFeature {
      * @return decorated driver
      */
     public static VisitableDriver decorateDriver(VisitableDriver driver) {
-        return decorateDriver(driver, 1000.0);
+        return new DeviceUsageDriverDecorator(driver, deviceUsageManager);
     }
 
-    /**
-     * Decorates the given driver with DeviceUsageDriverDecorator with custom capacity.
-     * @param driver driver to decorate
-     * @param maxWaterLevel custom capacity
-     * @return decorated driver
-     */
-    public static VisitableDriver decorateDriver(VisitableDriver driver, double maxWaterLevel) {
-        currentDecorator = new DeviceUsageDriverDecorator(driver, maxWaterLevel);
-        if (deviceManagementWindow == null) {
-            deviceManagementWindow = new DeviceManagementWindow(currentDecorator);
-        } else {
-            deviceManagementWindow.setDriver(currentDecorator); 
-        }
-        return currentDecorator;
+    public static DeviceUsageManager getDeviceUsageManager() {
+        return deviceUsageManager;
     }
 
     @Override

@@ -12,19 +12,19 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 import edu.kis.powp.appbase.gui.WindowComponent;
-import edu.kis.powp.jobs2d.drivers.DeviceUsageDriverDecorator;
+import edu.kis.powp.jobs2d.drivers.DeviceUsageManager;
 import edu.kis.powp.jobs2d.drivers.DeviceUsageSubscriber;
 
 public class DeviceManagementWindow extends JFrame implements WindowComponent, DeviceUsageSubscriber {
 
-    private DeviceUsageDriverDecorator driver;
+    private DeviceUsageManager deviceUsageManager;
     private JProgressBar waterProgressBar;
     private JLabel usageLabel;
 
     private static final long serialVersionUID = 1L;
 
-    public DeviceManagementWindow(DeviceUsageDriverDecorator driver) {
-        this.driver = driver;
+    public DeviceManagementWindow(DeviceUsageManager deviceUsageManager) {
+        this.deviceUsageManager = deviceUsageManager;
         this.setTitle("Device Management");
         this.setSize(400, 200);
         Container content = this.getContentPane();
@@ -37,8 +37,8 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
 
         content.add(new JLabel("Water Level:"), c);
 
-        waterProgressBar = new JProgressBar(0, 1000);
-        waterProgressBar.setValue(1000);
+        waterProgressBar = new JProgressBar(0, 10000);
+        waterProgressBar.setValue(10000);
         waterProgressBar.setStringPainted(true);
         content.add(waterProgressBar, c);
 
@@ -47,32 +47,32 @@ public class DeviceManagementWindow extends JFrame implements WindowComponent, D
 
         JButton btnRefill = new JButton("Refill");
         btnRefill.addActionListener((ActionEvent e) -> {
-            if (this.driver != null) {
-                this.driver.refill();
+            if (this.deviceUsageManager != null) {
+                this.deviceUsageManager.refill();
             }
         });
         content.add(btnRefill, c);
 
         JButton btnService = new JButton("Service");
         btnService.addActionListener((ActionEvent e) -> {
-            if (this.driver != null) {
-                this.driver.service();
+            if (this.deviceUsageManager != null) {
+                this.deviceUsageManager.service();
             }
         });
         content.add(btnService, c);
 
-        if (this.driver != null) {
-            this.driver.addSubscriber(this);
+        if (this.deviceUsageManager != null) {
+            this.deviceUsageManager.addSubscriber(this);
         }
     }
 
-    public void setDriver(DeviceUsageDriverDecorator newDriver) {
-        if (this.driver != null) {
-            this.driver.removeSubscriber(this);
+    public void setDeviceUsageManager(DeviceUsageManager newDeviceUsageManager) {
+        if (this.deviceUsageManager != null) {
+            this.deviceUsageManager.removeSubscriber(this);
         }
-        this.driver = newDriver;
-        if (this.driver != null) {
-            this.driver.addSubscriber(this);
+        this.deviceUsageManager = newDeviceUsageManager;
+        if (this.deviceUsageManager != null) {
+            this.deviceUsageManager.addSubscriber(this);
         }
     }
 
